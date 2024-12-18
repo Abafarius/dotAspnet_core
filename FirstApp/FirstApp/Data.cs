@@ -4,10 +4,10 @@ namespace FirstApp
 {
     public static class Data
     {
-        public static Dictionary<int, Fruit> all = new Dictionary<int, Fruit>
+        public static Dictionary<int, TaskManager> all = new Dictionary<int, TaskManager>
         {
-            { 1, new Fruit("Banana", 20) },
-            { 2, new Fruit("Apple", 40) }
+            { 1, new TaskManager("Do some tasks", "blablabal", true) },
+            { 2, new TaskManager("Eat Apple", "yoyoyoy", false) }
                        
         };
     }
