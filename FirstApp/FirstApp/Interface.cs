@@ -6,6 +6,6 @@ namespace FirstApp
     {
         IResult GetById(int id);
         IResult CreateFruit(int id, Fruit fruit);
-        IResult DeleteById(int id);
+        IResult DeleteFruit(int id);
     }
 }
