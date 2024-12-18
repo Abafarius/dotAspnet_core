@@ -4,17 +4,17 @@ namespace FirstApp
 {
     public static class Command
     {  
-        public static void CreateFruit(int id, Fruit fruit)
+        public static void CreateTask(int id, TaskManager task)
         {
-            Data.all.Add(id, fruit);
+            Data.all.Add(id, task);
         }
 
-        public static void UpdateFruit(int id, Fruit fruit)
+        public static void UpdateTask(int id, TaskManager task)
         {
-            Data.all[id] = fruit;   
+            Data.all[id] = task;   
         }
 
-        public static void DeleteFruit(int id)
+        public static void DeleteTask(int id)
         {
             Data.all.Remove(id);
         }
