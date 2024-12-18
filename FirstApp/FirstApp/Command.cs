@@ -1,12 +1,29 @@
 ﻿using FirstApp.Model;
+using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace FirstApp
 {
-    public static class Command
-    {  
-        public static void CreateFruit(int id, Fruit fruit)
+    public class CommandFruit : ICommand
+    {
+        public IResult GetById(int id)
         {
-            Data.all.Add(id, fruit);
+            var result = Data.all.TryGetValue(id, out var results);
+
+            if (result)
+            {
+                return TypedResults.Ok(results);
+            }
+            return Results.Problem(statusCode: 404);
+        }
+        public IResult CreateFruit(int id, Fruit fruit)
+        {
+            return Data.all.TryAdd(id, fruit)
+               ? TypedResults.Created("fruit/{id}", fruit)
+               : Results.ValidationProblem(new Dictionary<string, string[]>
+               {
+                    {"id", new[] {"A fruit with this id was created!"} }
+               });
         }
 
         public static void UpdateFruit(int id, Fruit fruit)
@@ -14,9 +31,10 @@ namespace FirstApp
             Data.all[id] = fruit;   
         }
 
-        public static void DeleteFruit(int id)
+        public IResult DeleteFruit(int id)
         {
             Data.all.Remove(id);
+            return Results.NoContent();
         }
     }
 }
