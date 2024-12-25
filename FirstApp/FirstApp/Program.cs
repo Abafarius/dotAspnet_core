@@ -1,17 +1,15 @@
 using FirstApp;
-using FirstApp.Model;
+using LifeTime; 
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSwaggerGen();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<Context>();
+builder.Services.AddTransient<Repository>();
 
 var app = builder.Build();
-app.UseSwagger();
-app.UseSwaggerUI();
-//var data = new Data();
-app.MapGet("/fruit/all", () => Data.all);
-app.MapGet("/fruit/{id}", (int id) => Data.all[id]);
-app.MapPost("/friut/{id}", Command.CreateFruit);
-app.MapPut("/fruit/{id}", Command.UpdateFruit);
-app.MapDelete("/fruit/{id}", Command.DeleteFruit);
+
+app.MapGet("/", GetString);
+
 app.Run();
+
+static string GetString(Context context, Repository repository) 
+	=> $"context: { context.DataRow}, repository:{ repository.DataRow }";
