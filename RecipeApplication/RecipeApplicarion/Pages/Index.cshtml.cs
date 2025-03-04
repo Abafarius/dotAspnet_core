@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using RecipeApplication.Entity;
 
-namespace RecipeApplicarion.Pages
+namespace RecipeApplication.Pages
 {
     public class IndexModel : PageModel
     {
