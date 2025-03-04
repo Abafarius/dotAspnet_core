@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace CategoryCRUD.Models
 {
     public class Category
@@ -8,11 +7,8 @@ namespace CategoryCRUD.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty; // 🛠️ Убрали ошибку с null
 
-
-        [Range(1, 100)]
         public int DisplayOrder { get; set; }
     }
 }
