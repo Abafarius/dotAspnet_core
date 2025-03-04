@@ -1,0 +1,30 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="table-content">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Рецепт</th>
+                <th>Время приготовления</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Recipes)
+            {
+                <tr>
+                    <td class="align-items">@item.Name</td>
+                    <td class="align-items">@item.TimeToCook</td>
+                    <td class="align-items">
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<a asp-page="Recipes/Create" class="btn btn-success">Create new recipe</a>
