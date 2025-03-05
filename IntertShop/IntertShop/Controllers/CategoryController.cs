@@ -1,4 +1,5 @@
-﻿using IntertShop.Data;
+﻿using InternetShop.DataAccess.Repository.Categories;
+using IntertShop.Data;
 using IntertShop.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,17 +7,17 @@ namespace IntertShop.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(CategoryRepository categoryRepository)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
         }
 
         [HttpGet]
         public IActionResult Index() 
         {
-            List<Category> categories = _context.Categories.ToList();
+            List<Category> categories = _categoryRepository.GetAll().ToList();
 
             return View(categories);
         }
@@ -32,8 +33,8 @@ namespace IntertShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Categories.Add(category);
-                _context.SaveChanges();
+                _categoryRepository.Categories.Add(category);
+                _categoryRepository.SaveChanges();
                 TempData["SuccessMessage"] = "Запись успешно создана!";
                 return RedirectToAction("Index");
             }
