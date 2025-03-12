@@ -9,7 +9,7 @@ namespace IntertShop.Controllers
     {
         private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(CategoryRepository categoryRepository)
+        public CategoryController(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }
@@ -17,7 +17,7 @@ namespace IntertShop.Controllers
         [HttpGet]
         public IActionResult Index() 
         {
-            List<Category> categories = _categoryRepository.GetAll().ToList();
+            var categories = _categoryRepository.GetAll();
 
             return View(categories);
         }
@@ -33,10 +33,10 @@ namespace IntertShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _categoryRepository.Categories.Add(category);
-                _categoryRepository.SaveChanges();
+                _categoryRepository.Add(category);
+                _categoryRepository.Save();
                 TempData["SuccessMessage"] = "Запись успешно создана!";
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
 
             TempData["ErrorMessage"] = "Возникла ошибка";
@@ -51,7 +51,7 @@ namespace IntertShop.Controllers
                 return NotFound();
             }
 
-            var category = _context.Categories.FirstOrDefault(c => c.Id == id);
+            var category = _categoryRepository.GetById(c => c.Id == id);
 
             if (category == null)
             {
@@ -66,8 +66,8 @@ namespace IntertShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Update(category);
-                _context.SaveChanges();
+                _categoryRepository.Update(category);
+                _categoryRepository.Save();
                 TempData["SuccessMessage"] = "Запись успешно изменена!";
                 return RedirectToAction("Index");
             }
@@ -84,7 +84,7 @@ namespace IntertShop.Controllers
                 return NotFound();
             }
 
-            var category = _context.Categories.FirstOrDefault(c => c.Id == id);
+            var category = _categoryRepository.GetById(c => c.Id == id);
 
             if (category == null)
             {
@@ -103,8 +103,8 @@ namespace IntertShop.Controllers
                 return NotFound();
             }
 
-            _context.Remove(category);
-            _context.SaveChanges();
+            _categoryRepository.Delete(category);
+            _categoryRepository.Save();
             TempData["SuccessMessage"] = "Запись успешно изменена!";
 
             return RedirectToAction("Index");
