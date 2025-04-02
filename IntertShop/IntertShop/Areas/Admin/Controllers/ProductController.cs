@@ -19,7 +19,7 @@ namespace Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var product = _unitOfWork.ProductRepository.GetAll();
+            var product = _unitOfWork.ProductRepository.GetAllWithCategories();
 
             return View(product);
         }
