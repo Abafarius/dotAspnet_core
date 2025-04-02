@@ -1,4 +1,4 @@
-﻿using IntertShop.Data;
+﻿using InternetShop.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
