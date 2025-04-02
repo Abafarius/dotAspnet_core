@@ -1,8 +1,10 @@
-﻿using InternetShop.DataAccess.Repository;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using InternetShop.DataAccess.Repository;
 using InternetShop.Models.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Permissions;
+using Web.Areas.Admin.Models;
 
 namespace Web.Areas.Admin.Controllers
 {
@@ -10,6 +12,9 @@ namespace Web.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private ProductViewModel product;
+
+        public IEnumerable<SelectListItem> CategoryList { get; private set; }
 
         public ProductController(IUnitOfWork unitOfWork)
         {
@@ -27,27 +32,37 @@ namespace Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.CategoryList = _unitOfWork.CategoryRepository.GetAll()
-                .Select(c => new SelectListItem
-                {
-                    Text = c.Name,
-                    Value = c.Id.ToString()
-                });
 
-            return View();
+            var productVM = new ProductViewModel();
+            {
+                CategoryList = _unitOfWork.CategoryRepository.GetAll()
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    });
+            };
+            TempData["ErrorMessage"] = "Возникла ошибка";
+            return View(productVM);
         }
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult Create(ProductViewModel product)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.ProductRepository.Add(product);
+                _unitOfWork.ProductRepository.Add(product.ProductVM);
                 _unitOfWork.Save();
 
                 TempData["SuccessMessage"] = "Запись успешно создана!";
                 return RedirectToAction("Index");
             }
+            product.CategoryList = _unitOfWork.CategoryRepository.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                });
 
             TempData["ErrorMessage"] = "Возникла ошибка";
             return View(product);
@@ -60,11 +75,19 @@ namespace Web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            var product = new ProductViewModel()
+            {
+                ProductVM = _unitOfWork.ProductRepository.GetById(x => x.Id == id),
+                CategoryList = _unitOfWork.CategoryRepository.GetAll()
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString()
+                    })
+            };
 
-            var product = _unitOfWork.ProductRepository
-                .GetById(x => x.Id == id);
 
-            if (product == null)
+            if (product.ProductVM == null)
             {
                 return NotFound();
             }
@@ -73,16 +96,22 @@ namespace Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public IActionResult Edit(ProductViewModel product)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.ProductRepository.Update(product);
+                _unitOfWork.ProductRepository.Update(product.ProductVM);
                 _unitOfWork.Save();
 
                 TempData["SuccessMessage"] = "Запись успешно изменена!";
                 return RedirectToAction("Index");
             }
+            product.CategoryList = _unitOfWork.CategoryRepository.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                });
 
             TempData["ErrorMessage"] = "Возникла ошибка";
             return View(product);
